@@ -1,0 +1,5 @@
+
+interface Alert {
+    name: string;
+  }
+  

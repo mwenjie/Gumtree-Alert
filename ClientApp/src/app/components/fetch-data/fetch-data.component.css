@@ -1,0 +1,116 @@
+#gb-main {
+    min-height: 100%;
+    position: relative;
+    background: #f1f1f1!important;
+}
+
+.product_name_bar {
+    background-color: #4752b3;
+    padding: 15px 0px;
+    height: 90px;
+}
+
+.product_name_bar .content {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 650px;
+}
+
+.product_name {
+    font-size: 30px;
+    font-weight: 300;
+    line-height: 29px;
+    color: #fff;
+    white-space: nowrap;
+    margin: 0;
+}
+
+.product_name_bar .description {
+    text-align: left;
+    font-size: 13px;
+    color: rgba(255,255,255,0.54);
+    line-height: 31px;
+}
+
+.main-page {
+    min-height: 100%;
+    position: relative;
+    padding-bottom: 70px;
+    top: -75px;
+}
+
+#float-parent {
+    min-height: 67px;
+    padding-top: 10px;
+    z-index: 100;
+}
+
+#main-controls {
+    z-index: 101;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.main-page .page-content {
+    margin: 0px 16px;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 650px;
+}
+
+.section {
+    background: #fff;
+    padding: 0px 25px;
+    box-sizing: border-box;
+    margin: 17px 0px 0px 0px;
+    box-shadow: 0 0 2px rgba(0,0,0,.12), 0 2px 4px rgba(0,0,0,.24);
+}
+
+.my_alerts .title {
+    display: inline-block;
+    vertical-align: middle;
+    padding: 0px;
+    margin-bottom: 4px;
+}
+
+.title {
+    color: rgba(0,0,0,0.54);
+    font-size: 20px;
+    font-weight: 300;
+    display: inline-block;
+    margin-top: 30px;
+    margin-bottom: 0px;
+}
+
+.alert-summary-div {
+    left: 170px;
+    border-bottom: 1px solid grey;
+    padding-top: 5px;
+    margin-right: 5px;
+}
+
+.alert-summary-div .row h3{
+    margin-top:20px;
+    margin-bottom: 0;
+    padding-bottom: 15px;
+    margin-left: 0;
+}
+
+.alert-summary-div .add{
+    margin-top: 20px;
+    float:right;
+    margin-right: 5px;
+}
+
+#manage-alerts-div {
+    padding-bottom: 13px;
+    left: 170px;
+}
+
+#manage-alerts-div .row {
+    padding-top: 15px;
+    left: 170px;
+    border-bottom: 1px solid grey;
+    margin-left: 2px;
+    margin-right: 2px;
+}

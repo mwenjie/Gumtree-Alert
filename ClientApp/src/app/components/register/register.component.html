@@ -1,0 +1,119 @@
+<my-slide-panel [activePane]="isLeftVisible ? 'left' : 'right'">
+    <div leftPane>
+        <div class="row">
+            <div class="col-sm-7">
+                <form class="form-horizontal" [formGroup]="form" (ngSubmit)="onRegister()">
+                    <h4>Create a new account.</h4>
+                    <hr />
+                    <div class="form-group">
+                        <div class="col-lg-2 control-label">
+                            <label for="email">Email</label>
+                        </div>
+                        <div class="col-lg-5">
+                            <input type="Email" id="email" formControlName="email" required placeholder="Enter email address" class="form-control">
+                        </div>
+                        <!-- Email error block -->
+                        <div class="col-sm-5 text-danger" *ngIf="email.invalid && email.touched">
+                            <div *ngIf="email.errors?.required">
+                                Email field can't be blank
+                            </div>
+                            <div *ngIf="email.errors?.pattern  && email.touched text-danger">
+                                The email id doesn't seem right
+                            </div>
+                        </div>
+                    </div>
+                    <div formGroupName="password">
+                        <div class="form-group">
+                            <div class="col-lg-2 control-label">
+                                <label for="password">Password</label>
+                            </div>
+                            <div class="col-lg-5">
+                                <input type="Password" id="password" formControlName="pwd" required placeholder="Enter password" class="form-control">
+                            </div>
+                            <!-- Password error block -->
+                            <div class="col-sm-5 text-danger" *ngIf="password.invalid && password.touched">
+                                Password need to be more than 8 characters
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-lg-2 control-label">
+                                <label for="confirmPassword">Confirm Password</label>
+                            </div>
+                            <div class="col-lg-5">
+                                <input type="Password" id="confirmPassword" required formControlName="confirmPwd" required class="form-control">
+                            </div>
+                            <!-- Password don't match error block -->
+                            <div class="col-sm-5 text-danger" *ngIf="password.value != confirmPassword.value && confirmPassword.touched">
+                                Password don't match
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-lg-10 col-lg-offset-2">
+                            <button type="submit" [disabled]="!form.valid" class="btn btn-default">Register</button>
+                        </div>
+                    </div>
+                </form>
+                <p>Form value {{ form.value | json }} </p>
+                <p> Form status {{ form.status | json}} </p>
+            </div>
+
+
+        </div>
+    </div>
+    <div rightPane>
+        <div class="row">
+            <div class="col-sm-7">
+                <h4>Enable authenticator to secure your account</h4>
+                <hr />
+                <div>
+                    <p>To use an authenticator app go through the following steps:</p>
+                    <ol class="list">
+                        <li>
+                            <p>
+                                Download a two-factor authenticator app like Microsoft Authenticator for
+                                <a href="https://go.microsoft.com/fwlink/?Linkid=825071">Windows Phone</a>,
+                                <a href="https://go.microsoft.com/fwlink/?Linkid=825072">Android</a> and
+                                <a href="https://go.microsoft.com/fwlink/?Linkid=825073">iOS</a> or Google Authenticator for
+                                <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&amp;hl=en">Android</a> and
+                                <a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8">iOS</a>.
+                            </p>
+                        </li>
+                        <li>
+                            <p>Scan the QR Code or enter this key
+                                <kbd>{{secret}}</kbd> into your two factor authenticator app. Spaces and casing do not matter.</p>
+                            <ngx-qrcode [qrc-element-type]="elementType" [qrc-value]="imageUrl">
+                            </ngx-qrcode>
+                        </li>
+                        <li>
+                            <p>
+                                Once you have scanned the QR code or input the key above, your two factor authentication app will provide you with a unique
+                                code. Enter the code in the confirmation box below.
+                            </p>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <form [formGroup]="form2fa" (ngSubmit)="onCodeSubmit()">
+                                        <div class="form-group">
+                                            <div class="control-label">
+                                                <label for="code">Verification Code</label>
+                                                <input type="text" maxlength="6" id="code" formControlName="code" class="form-control">
+                                                <!-- Email error block -->
+                                                <div class="text-danger" *ngIf="code.invalid && code.touched">
+                                                    <div *ngIf="code.errors?.required">
+                                                        Verification Code cannot be blank
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <button type="submit" [disabled]="!form2fa.valid" class="btn btn-default">Verify</button>
+                                    </form>
+                                    <p>Verify {{this.verify}} Token{{this.token}}</p>
+                                </div>
+                            </div>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+</my-slide-panel>

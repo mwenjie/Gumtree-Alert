@@ -1,0 +1,61 @@
+<h2 mat-dialog-title>Create a new alert</h2>
+
+
+<mat-dialog-content [formGroup]="form">
+    <mat-form-field>
+
+        <input matInput placeholder="Subject" formControlName="subject">
+
+    </mat-form-field>
+
+    <mat-form-field>
+
+        <input matInput placeholder="Url" formControlName="url">
+
+    </mat-form-field>
+
+    <mat-form-field>
+
+        <input matInput placeholder="Email" formControlName="email">
+
+    </mat-form-field>
+
+    <mat-form-field>
+        <mat-select placeholder="Frequency" [formControl]="frequency">
+            <mat-option>--</mat-option>
+            <mat-option *ngFor="let frequency of frequencies" [value]="frequency">
+                {{frequency}}
+            </mat-option>
+        </mat-select>
+
+    </mat-form-field>
+
+    <table cellspacing="0">
+        <tr>
+            <td>
+                <mat-form-field>
+                    <input matInput placeholder="Min" type="number" formControlName="min">
+                    <span matPrefix>$&nbsp;</span>
+                </mat-form-field>
+            </td>
+            <td>
+                <mat-form-field>
+                    <input matInput placeholder="Max" type="number" formControlName="max">
+                    <span matPrefix>$&nbsp;</span>
+                </mat-form-field>
+            </td>
+        </tr>
+    </table>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+
+    <button class="mat-raised-button" (click)="close()">
+        Close
+    </button>
+
+    <button class="mat-raised-button mat-primary" (click)="save()">
+        Save
+    </button>
+
+</mat-dialog-actions>

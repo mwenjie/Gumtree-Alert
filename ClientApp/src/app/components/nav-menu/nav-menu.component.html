@@ -1,0 +1,28 @@
+<nav class="navbar navbar-expand-sm navbar-inverse">
+        <ul class="nav navbar-nav">
+            <li [routerLinkActive]='["link-active"]' [routerLinkActiveOptions]='{ exact: true }'>
+                <a [routerLink]='["/"]' (click)='collapse()'>
+                    <span class='glyphicon glyphicon-home'></span> Home
+                </a>
+            </li>
+            <li [routerLinkActive]='["link-active"]'>
+                <a [routerLink]='["/counter"]' (click)='collapse()'>
+                    <span class='glyphicon glyphicon-education'></span> Counter
+                </a>
+            </li>
+            <li [routerLinkActive]='["link-active"]'>
+                <a [routerLink]='["/fetch-data"]' (click)='collapse()'>
+                    <span class='glyphicon glyphicon-th-list'></span> Fetch data
+                </a>
+            </li>
+        </ul>
+        <div *ngIf="isUserLoggedIn">
+            <ul class="nav navbar-nav navbar-right">
+                <li (click)="logout()">
+                    <a [routerLink]="['/login']">
+                        <span class="glyphicon glyphicon-log-out"></span> Log Out
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
