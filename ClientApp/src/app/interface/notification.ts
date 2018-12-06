@@ -6,5 +6,7 @@ interface Notification {
     frequency: string;
     min: number;
     max: number;
+    advertisements: string;
+    advertisement: Advertisement[];
   }
   

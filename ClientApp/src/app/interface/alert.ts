@@ -1,5 +1,10 @@
 
 interface Alert {
-    name: string;
-  }
+    Id: number;
+    notificationId: number;
+    email: string;
+    subject: string;
+    advertisements: string;
+    advertisement: Advertisement[];
+}
   

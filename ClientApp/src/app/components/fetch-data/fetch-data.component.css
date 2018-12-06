@@ -1,22 +1,22 @@
-#gb-main {
+::ng-deep #gb-main {
     min-height: 100%;
     position: relative;
     background: #f1f1f1!important;
 }
 
-.product_name_bar {
+::ng-deep .product_name_bar {
     background-color: #4752b3;
     padding: 15px 0px;
     height: 90px;
 }
 
-.product_name_bar .content {
+::ng-deep .product_name_bar .content {
     margin-left: auto;
     margin-right: auto;
     max-width: 650px;
 }
 
-.product_name {
+::ng-deep .product_name {
     font-size: 30px;
     font-weight: 300;
     line-height: 29px;
@@ -25,14 +25,14 @@
     margin: 0;
 }
 
-.product_name_bar .description {
+::ng-deep .product_name_bar .description {
     text-align: left;
     font-size: 13px;
     color: rgba(255,255,255,0.54);
     line-height: 31px;
 }
 
-.main-page {
+::ng-deep .main-page {
     min-height: 100%;
     position: relative;
     padding-bottom: 70px;
@@ -113,4 +113,12 @@
     border-bottom: 1px solid grey;
     margin-left: 2px;
     margin-right: 2px;
+}
+
+#manage-alerts-div .a {
+    text-decoration: none;
+}
+
+#manage-alerts-div a:hover {
+    text-decoration: none;
 }

@@ -15,7 +15,13 @@ namespace ClientApp.ViewModels
         public string url { get; set; }
         public string email { get; set; }
         public string frequency { get; set; }
+        public int min { get; set; }
+        public int max { get; set; }
+        public List<AdvertisementViewModel> advertisement{ get; set;}
+
+        public string advertisements{ get; set;}
     }
+    
 
 
 

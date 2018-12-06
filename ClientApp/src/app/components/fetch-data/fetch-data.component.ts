@@ -1,11 +1,10 @@
 import { Component, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { NotificationService } from '../../services/notification.service';
-import { Advertisement } from '../../models/advertisement.model';
 import { MatDialog } from '@angular/material/dialog';
 import { interval } from "rxjs";
 import { ConfigureAlertDialogComponent } from './config-alert.component';
-import { switchMap, concatMap, map, flatMap, tap } from 'rxjs/operators';
+import { switchMap, concatMap, map, flatMap, tap, mergeMap } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 
@@ -17,8 +16,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 export class FetchDataComponent {
 
   private name: string;
-  public advertisements: Advertisement;
-  displayedColumns: string[] = ['subject'];
+  public alerts: Alert[] = [];
   notifications: Notification[] = [];
   load$ = new BehaviorSubject('');
 
@@ -34,14 +32,23 @@ export class FetchDataComponent {
       switchMap(_ =>
         this.notificationService.countNotification().pipe(
           tap(result => this.notifications = result)
-          , flatMap(notifications => notifications)
-          , flatMap(
-            (e) => interval(this.notificationService.calculateInterval(e.frequency)).pipe(map(o => e.subject)))
+          , flatMap(notifications => notifications) //flatten every observable to array
+          , flatMap( //flatten items in the array
+            notification => interval(this.notificationService.calculateInterval(notification.frequency)).pipe(
+                      switchMap(o => this.notificationService.queryAdvertisement(notification))
+                      ) 
+            )
         )
       ));
 
-    notification$.subscribe(r => console.log(r));
- 
+    const saveNotification$ = notification$.pipe(mergeMap(updatedNotification => this.notificationService.saveNotification(updatedNotification)));
+    //const alert$ = notification$.pipe(flatMap(message => this.notificationService.sendNotification(message)));
+
+    //alert$.subscribe(r => console.log(r));
+    saveNotification$.subscribe(r => console.log(r));
+    
+   
+
   }
 
   openDialog(): void {
@@ -86,9 +93,6 @@ export class FetchDataComponent {
       })
     ).subscribe(data => this.notifications = data);
   }
-
-
-
 
 }
 

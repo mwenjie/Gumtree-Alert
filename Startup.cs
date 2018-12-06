@@ -42,7 +42,7 @@ namespace myapps
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection(); --disable https for development, enable for prod
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
 

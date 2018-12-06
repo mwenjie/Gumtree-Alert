@@ -15,22 +15,31 @@ namespace myapp.Controllers
     [Route("api/[controller]")]
     public class WebScrapController : Controller
     {
-
-        public List<Advertisement> getAdvertisements(NotificationViewModel nv)
+        [HttpPost("query")]
+        [ProducesResponseType(200, Type = typeof(NotificationViewModel))]
+        [ProducesResponseType(404)]
+        public async Task<ActionResult> getAdvertisements([FromBody]NotificationViewModel nv)
         {
-            List<Advertisement> ad = new List<Advertisement>();
-            var html = @"https://www.gumtree.com.au/s-g4560/k0";
+            List<AdvertisementViewModel> ad = new List<AdvertisementViewModel>();
+            var html = nv.url;
             HtmlWeb web = new HtmlWeb();
-            var htmlDoc = web.Load(html);
+            var htmlDoc = await web.LoadFromWebAsync(html);
+
             var htmlNodes = htmlDoc.DocumentNode.SelectNodes("//*/div[2]/div[1]/p[1]");
+            
+            if (htmlNodes is null){ //scrapping got nothing
+                return NotFound();
+            }
+
             foreach (var node in htmlNodes)
             {
-                Advertisement a = new Advertisement();
+                AdvertisementViewModel a = new AdvertisementViewModel();
                 var nodeParent = node.ParentNode.ParentNode.ParentNode;
                 var label = nodeParent.GetAttributeValue("aria-label", "");
                 var id = nodeParent.GetAttributeValue("id", "");
                 var s = label.Split("\n", StringSplitOptions.None);
-                a.Id = Convert.ToInt32(id.Replace("user-ad-", ""));
+                a.Id = id;
+                //a.Id = Convert.ToInt32(id.Replace("user-ad-", ""));
                 a.Title = s[0].Trim();
                 var p = s[1].Trim().Replace("Price: ", "")
                                                .Replace(" negotiable", "")
@@ -49,8 +58,9 @@ namespace myapp.Controllers
                 a.DateListed = DateTime.Now;
                 ad.Add(a);
             }
-
-            return ad;
+            nv.advertisement = ad.Where(s => s.Price >= nv.min && s.Price <= nv.max).ToList();
+            nv.advertisements = string.Join("\n",  nv.advertisement.Select(s => s.Title + "|" + s.Price + "|" + s.Location).ToList().ToArray());
+            return Ok(nv);
 
         }
 

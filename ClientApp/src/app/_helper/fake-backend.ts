@@ -15,14 +15,50 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 
     constructor() { }
 
+    upsertAdvertisement(newAlert: Advertisement, existingAlert: Advertisement){
+        return newAlert;
+    }
+
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         // array in local storage for registered users
         let users: any[] = JSON.parse(localStorage.getItem('users')) || [];
         let secretKey: string = JSON.parse(localStorage.getItem('secretKey')) || null;
         let notifications: any[] = JSON.parse(localStorage.getItem('notifications')) || [];
+        let alerts: any[] = JSON.parse(localStorage.getItem('alerts')) || [];
 
         // wrap in delayed observable to simulate server api call
         return Observable.of(null).mergeMap(() => {
+            //save alert
+            if (request.url.endsWith('/api/advertisement') && request.method === 'POST') {
+                // get new user object from post body
+                let newAlert = request.body;
+                console.log("alert:");
+
+                if (newAlert.Id == null) {
+                    // save new user
+                    newAlert.id = alert.length + 1;
+                    alerts.push(newAlert);
+                    console.log("pushed alerts:" + newAlert.advertisements);
+                    localStorage.setItem('alerts', JSON.stringify(alerts));
+
+                    // respond 200 OK
+                    return Observable.of(new HttpResponse({ status: 200, body: newAlert }));
+                }
+                else {
+                    let idx = alerts.findIndex(item => item.id === newAlert.id);
+                    if (idx >= 0) {
+                        alerts[idx].notificationId = newAlert.notificationId;
+                        alerts[idx].email = newAlert.email;
+                        alerts[idx].subject = newAlert.subject;
+                        let advertisement = alerts[idx].advertisement;
+                        alerts[idx].advertisement = this.upsertAdvertisement(newAlert.advertisement, advertisement)
+                        localStorage.setItem('alerts', JSON.stringify(alerts));
+                        return Observable.of(new HttpResponse({ status: 200, body: alerts[idx] }));
+                    }
+                }
+            }
+
+            //get notifications
             if (request.url.endsWith('/api/notification') && request.method === 'GET') {
                 if (request.headers.get('Authorization') === 'Bearer fake-jwt-token') {
                     let tempNotifications = notifications.length ? notifications : null;
@@ -56,6 +92,8 @@ export class FakeBackendInterceptor implements HttpInterceptor {
                         notifications[idx].frequency = newNotification.frequency;
                         notifications[idx].min = newNotification.min;
                         notifications[idx].max = newNotification.max;
+                        notifications[idx].advertisement = newNotification.advertisement;
+                        notifications[idx].advertisements = newNotification.advertisements;
                         localStorage.setItem('notifications', JSON.stringify(notifications));
                         return Observable.of(new HttpResponse({ status: 200 }));
                     }
