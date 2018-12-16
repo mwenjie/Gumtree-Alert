@@ -1,7 +1,8 @@
 interface Advertisement {
-    Id: string;
-    Title: string;
-    Price: number;
-    Location: string;
-    DateListed: Date;
+    id: string;
+    title: string;
+    price: number;
+    location: string;
+    dateListed: Date;
+    seen: boolean;
 }

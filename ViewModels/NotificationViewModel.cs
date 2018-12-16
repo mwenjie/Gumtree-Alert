@@ -18,8 +18,6 @@ namespace ClientApp.ViewModels
         public int min { get; set; }
         public int max { get; set; }
         public List<AdvertisementViewModel> advertisement{ get; set;}
-
-        public string advertisements{ get; set;}
     }
     
 

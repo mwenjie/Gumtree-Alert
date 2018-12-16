@@ -15,8 +15,22 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 
     constructor() { }
 
-    upsertAdvertisement(newAlert: Advertisement, existingAlert: Advertisement){
-        return newAlert;
+    upsertAdvertisement(newAdvertisement: Advertisement[], existingAdvertisement: Advertisement[]): Advertisement[] {
+        for (let i = 0; i < newAdvertisement.length; i++) {
+            let idx = existingAdvertisement.findIndex(item => item.id === newAdvertisement[i].id);
+            if (idx >= 0) { //existing
+                existingAdvertisement[idx].dateListed = newAdvertisement[i].dateListed;
+                existingAdvertisement[idx].location = newAdvertisement[i].location;
+                existingAdvertisement[idx].price = newAdvertisement[i].price;
+                existingAdvertisement[idx].title = newAdvertisement[i].title;
+            }
+            else { //new
+                existingAdvertisement.push(newAdvertisement[i]);
+            }
+        }
+
+        return existingAdvertisement;
+
     }
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -24,37 +38,37 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         let users: any[] = JSON.parse(localStorage.getItem('users')) || [];
         let secretKey: string = JSON.parse(localStorage.getItem('secretKey')) || null;
         let notifications: any[] = JSON.parse(localStorage.getItem('notifications')) || [];
-        let alerts: any[] = JSON.parse(localStorage.getItem('alerts')) || [];
 
         // wrap in delayed observable to simulate server api call
         return Observable.of(null).mergeMap(() => {
-            //save alert
-            if (request.url.endsWith('/api/advertisement') && request.method === 'POST') {
-                // get new user object from post body
-                let newAlert = request.body;
-                console.log("alert:");
 
-                if (newAlert.Id == null) {
-                    // save new user
-                    newAlert.id = alert.length + 1;
-                    alerts.push(newAlert);
-                    console.log("pushed alerts:" + newAlert.advertisements);
-                    localStorage.setItem('alerts', JSON.stringify(alerts));
+            //update advertisement
+            if (request.url.match(/\/api\/advertisement\/\d+\/.+$/) && request.method === 'PUT') {
+                let seenFlag = request.body;
+                let urlParts = request.url.split('/');
+                let advertisementId = urlParts[urlParts.length - 1];
+                let notificationId = parseInt(urlParts[urlParts.length - 2]);
+                let idxNotification = notifications.findIndex(item => item.id === notificationId);
+                let idxAdvertisement = notifications[idxNotification].advertisement.findIndex(item => item.id === advertisementId);
+                notifications[idxNotification].advertisement[idxAdvertisement].seen = seenFlag;
+                localStorage.setItem('notifications', JSON.stringify(notifications));
+                return Observable.of(new HttpResponse({ status: 200 }));
+            }
 
-                    // respond 200 OK
-                    return Observable.of(new HttpResponse({ status: 200, body: newAlert }));
-                }
-                else {
-                    let idx = alerts.findIndex(item => item.id === newAlert.id);
-                    if (idx >= 0) {
-                        alerts[idx].notificationId = newAlert.notificationId;
-                        alerts[idx].email = newAlert.email;
-                        alerts[idx].subject = newAlert.subject;
-                        let advertisement = alerts[idx].advertisement;
-                        alerts[idx].advertisement = this.upsertAdvertisement(newAlert.advertisement, advertisement)
-                        localStorage.setItem('alerts', JSON.stringify(alerts));
-                        return Observable.of(new HttpResponse({ status: 200, body: alerts[idx] }));
-                    }
+            // get notification by id
+            if (request.url.match(/\/api\/notification\/\d+$/) && request.method === 'GET') {
+                // check for fake auth token in header and return user if valid, this security is implemented server side in a real application
+                if (request.headers.get('Authorization') === 'Bearer fake-jwt-token') {
+                    // find user by id in users array
+                    let urlParts = request.url.split('/');
+                    let id = parseInt(urlParts[urlParts.length - 1]);
+                    let matchedNotification = notifications.filter(notification => { return notification.id === id; });
+                    let notification = matchedNotification.length ? matchedNotification[0] : null;
+
+                    return Observable.of(new HttpResponse({ status: 200, body: notification }));
+                } else {
+                    // return 401 not authorised if token is null or invalid
+                    return Observable.throw('Unauthorised');
                 }
             }
 
@@ -69,19 +83,20 @@ export class FakeBackendInterceptor implements HttpInterceptor {
                     return Observable.throw('Unauthorised');
                 }
             }
+
             //upsert notification
             if (request.url.endsWith('/api/notification') && request.method === 'POST') {
-                // get new user object from post body
+                // get new notification object from post body
                 let newNotification = request.body;
 
                 if (newNotification.id == null) {
-                    // save new user
+                    // save new notification
                     newNotification.id = notifications.length + 1;
                     notifications.push(newNotification);
                     localStorage.setItem('notifications', JSON.stringify(notifications));
 
                     // respond 200 OK
-                    return Observable.of(new HttpResponse({ status: 200 }));
+                    return Observable.of(new HttpResponse({ status: 200, body: newNotification }));
                 }
                 else {
                     let idx = notifications.findIndex(item => item.id === newNotification.id);
@@ -92,16 +107,16 @@ export class FakeBackendInterceptor implements HttpInterceptor {
                         notifications[idx].frequency = newNotification.frequency;
                         notifications[idx].min = newNotification.min;
                         notifications[idx].max = newNotification.max;
-                        notifications[idx].advertisement = newNotification.advertisement;
-                        notifications[idx].advertisements = newNotification.advertisements;
+                        let advertisement = notifications[idx].advertisement;
+                        notifications[idx].advertisement = advertisement ? this.upsertAdvertisement(newNotification.advertisement, advertisement) : newNotification.advertisement;
                         localStorage.setItem('notifications', JSON.stringify(notifications));
-                        return Observable.of(new HttpResponse({ status: 200 }));
+                        return Observable.of(new HttpResponse({ status: 200, body: notifications[idx] }));
                     }
                 }
             }
 
-             // delete notification
-             if (request.url.match(/\/api\/notification\/\d+$/) && request.method === 'DELETE') {
+            // delete notification
+            if (request.url.match(/\/api\/notification\/\d+$/) && request.method === 'DELETE') {
                 // check for fake auth token in header and return user if valid, this security is implemented server side in a real application
                 if (request.headers.get('Authorization') === 'Bearer fake-jwt-token') {
                     // find user by id in users array

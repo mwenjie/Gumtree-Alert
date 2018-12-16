@@ -1,3 +1,5 @@
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU"
+  crossorigin="anonymous">
 <div id="gb-main" style="transform: initial;">
     <div class="product_name_bar">
         <div class="content">
@@ -5,17 +7,52 @@
             <div class="description">Monitor the web for interesting new content</div>
         </div>
     </div>
-    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-        <!-- Name Column -->
-        <ng-container matColumnDef="Title">
-            <th mat-header-cell *matHeaderCellDef> Title </th>
-            <td mat-cell *matCellDef="let advertisement"> {{advertisement.Title}} </td>
-        </ng-container>
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)">
-        </tr>
-    </table>
-    <p>
-        <button (click)="goBacktoNotification()">Back</button>
-    </p>
+    <div class="main-page">
+        <div id="float-parent">
+            <div class="date-picker">
+                <span class="back"><i class="fas fa-arrow-left" (click)="goBacktoNotification()"></i></span>
+                <span class="title">{{notification?.subject}}</span>
+            </div>
+        </div>
+        <div class="page-content">
+            <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+                <!-- Checkbox Column -->
+                <ng-container matColumnDef="select">
+                    <th mat-header-cell *matHeaderCellDef>
+                        <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
+                            [indeterminate]="selection.hasValue() && !isAllSelected()">
+                        </mat-checkbox>
+                    </th>
+                    <td mat-cell *matCellDef="let row">
+                        <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+                            [checked]="selection.isSelected(row)">
+                        </mat-checkbox>
+                    </td>
+                </ng-container>
+                <!-- Title Column -->
+                <ng-container matColumnDef="title">
+                    <th mat-header-cell *matHeaderCellDef> Title </th>
+                    <td mat-cell *matCellDef="let advertisement">{{advertisement.title}}</td>
+                </ng-container>
+                <!-- Price Column -->
+                <ng-container matColumnDef="price">
+                    <th mat-header-cell *matHeaderCellDef> Price </th>
+                    <td mat-cell *matCellDef="let advertisement"> {{advertisement.price}} </td>
+                </ng-container>
+                <!-- Location Column -->
+                <ng-container matColumnDef="location">
+                    <th mat-header-cell *matHeaderCellDef> Location </th>
+                    <td mat-cell *matCellDef="let advertisement"> {{advertisement.location}} </td>
+                </ng-container>
+                <!-- DateListed Column -->
+                <ng-container matColumnDef="dateListed">
+                    <th mat-header-cell *matHeaderCellDef> Date Listed </th>
+                    <td mat-cell *matCellDef="let advertisement"> {{advertisement.dateListed | date:'dd/MM/yyyy'}} </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)" [ngClass]="{ 'selected': selection.isSelected(row)}">
+                </tr>
+            </table>
+        </div>
+    </div>
 </div>

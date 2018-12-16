@@ -3,7 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import { FormGroup, FormBuilder, FormControl, Validators} from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material';
 import { NotificationService } from '../../services/notification.service';
-import { AlertService} from '../../services/alert.service';
+import { AlertService } from '../../services/alert.service';
 
 
 @Component({
@@ -31,6 +31,7 @@ import { AlertService} from '../../services/alert.service';
           "frequency": ["", [Validators.required]],
           "min": [""],
           "max": [""],
+          "advertisement": [""]
         })
 
         this.form.get('id').setValue(this.data.id);
@@ -40,13 +41,22 @@ import { AlertService} from '../../services/alert.service';
         this.form.get('frequency').setValue(this.data.frequency);
         this.form.get('min').setValue(this.data.min);
         this.form.get('max').setValue(this.data.max);
+        this.form.get('advertisement').setValue(this.data.advertisement);
+
       }
   
     close(): void {
       this.dialogRef.close();
     }
 
-    save(): void {
+    save():void {
+      this.alertService.confirm("Are you sure you want to set the current configuration as your new defaults?", 
+        () => this.saveConfirm(),
+        () => this.dialogRef.close()
+      )
+    }
+
+    saveConfirm(): void {
       let newNotification  = <Notification>{}
       newNotification.id = this.form.value.id;
       newNotification.subject = this.form.value.subject;
@@ -55,6 +65,7 @@ import { AlertService} from '../../services/alert.service';
       newNotification.frequency = this.form.value.frequency;
       newNotification.min = this.form.value.min;
       newNotification.max = this.form.value.max;
+      newNotification.advertisement = this.form.value.advertisement;
       this.notificationService.saveNotification(newNotification)
       .subscribe(
         data => {
@@ -77,6 +88,8 @@ import { AlertService} from '../../services/alert.service';
     get min() { return this.form.get('min'); }
 
     get max() { return this.form.get('max'); }
+
+    get advertisement() { return this.form.get('advertisement'); }
   
   }
   

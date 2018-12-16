@@ -10,16 +10,17 @@ namespace ClientApp.ViewModels
 {
     public class AdvertisementViewModel
     {
-        public string Id { get; set; }
+        public string id { get; set; }
 
-         public string Title { get; set; }
+         public string title { get; set; }
 
-        public int Price { get; set; }
+        public int price { get; set; }
 
-        public string Location { get; set; }
+        public string location { get; set; }
 
-        public DateTime DateListed { get; set; }
+        public DateTime dateListed { get; set; }
 
+        public Boolean seen { get; set; }
 
     }
 }

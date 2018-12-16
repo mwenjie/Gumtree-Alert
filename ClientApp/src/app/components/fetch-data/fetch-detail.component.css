@@ -1,0 +1,27 @@
+.mat-elevation-z8 {
+    left: 80px;
+    width: 90%;
+    margin: 20px;
+}
+
+.mat-row.selected {
+    text-decoration: line-through;
+  }
+
+.date-picker {
+    padding-top: 40px;
+    color: #ffffff;
+    max-width: 650px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.date-picker .back {
+    margin-right: 35px;
+    cursor:pointer;
+    opacity: .5;
+}
+
+.date-picker .back:hover {
+    opacity: .8;
+}

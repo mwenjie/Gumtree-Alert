@@ -1,6 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { NotificationService } from '../../services/notification.service';
+import { AlertService } from '../../services/alert.service';
 import { MatDialog } from '@angular/material/dialog';
 import { interval } from "rxjs";
 import { ConfigureAlertDialogComponent } from './config-alert.component';
@@ -16,7 +17,6 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 export class FetchDataComponent {
 
   private name: string;
-  public alerts: Alert[] = [];
   notifications: Notification[] = [];
   load$ = new BehaviorSubject('');
 
@@ -25,6 +25,7 @@ export class FetchDataComponent {
     http: HttpClient,
     @Inject('BASE_URL') baseUrl: string,
     private notificationService: NotificationService,
+    private alertService: AlertService,
     private dialog: MatDialog
   ) {
 
@@ -35,19 +36,19 @@ export class FetchDataComponent {
           , flatMap(notifications => notifications) //flatten every observable to array
           , flatMap( //flatten items in the array
             notification => interval(this.notificationService.calculateInterval(notification.frequency)).pipe(
-                      switchMap(o => this.notificationService.queryAdvertisement(notification))
-                      ) 
+              switchMap(o => this.notificationService.queryAdvertisement(notification))
             )
+          )
         )
       ));
 
     const saveNotification$ = notification$.pipe(mergeMap(updatedNotification => this.notificationService.saveNotification(updatedNotification)));
-    //const alert$ = notification$.pipe(flatMap(message => this.notificationService.sendNotification(message)));
+    const alert$ = saveNotification$.pipe(flatMap(message => this.notificationService.sendNotification(message)));
 
-    //alert$.subscribe(r => console.log(r));
-    saveNotification$.subscribe(r => console.log(r));
-    
-   
+    alert$.subscribe(r => console.log(r));
+    //saveNotification$.subscribe();
+
+
 
   }
 
@@ -76,7 +77,8 @@ export class FetchDataComponent {
         email: notification.email,
         frequency: notification.frequency,
         min: notification.min,
-        max: notification.max
+        max: notification.max,
+        advertisement: notification.advertisement
       }
     });
 
@@ -86,12 +88,21 @@ export class FetchDataComponent {
   }
 
   deleteNotification(notification: Notification) {
+    this.alertService.confirm("Are you sure you want to set the current configuration as your new defaults?",
+      () => this.goToDeleteNotification(notification),
+      () => null
+    )
+  }
 
+  goToDeleteNotification(notification: Notification) {
     this.notificationService.deleteNotification(notification.id).pipe(
       concatMap(result => {
         return this.notificationService.countNotification()
       })
-    ).subscribe(data => this.notifications = data);
+    ).subscribe(data => {
+      this.notifications = data;
+      this.load$.next('');
+    });
   }
 
 }

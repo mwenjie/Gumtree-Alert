@@ -7,7 +7,7 @@
 ::ng-deep .product_name_bar {
     background-color: #4752b3;
     padding: 15px 0px;
-    height: 90px;
+    height: 100px;
 }
 
 ::ng-deep .product_name_bar .content {
@@ -39,7 +39,7 @@
     top: -75px;
 }
 
-#float-parent {
+::ng-deep #float-parent {
     min-height: 67px;
     padding-top: 10px;
     z-index: 100;
@@ -51,7 +51,7 @@
     margin-right: auto;
 }
 
-.main-page .page-content {
+::ng-deep .main-page .page-content {
     margin: 0px 16px;
     margin-left: auto;
     margin-right: auto;

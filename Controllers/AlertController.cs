@@ -16,9 +16,12 @@ namespace myapp.Controllers
     public class AlertController : Controller
     {
         [HttpPost("send")]
-        public async Task<ActionResult> Send([FromBody]AlertViewModel nv)
+        public async Task<ActionResult> Send([FromBody]NotificationViewModel nv)
         {
-            if(nv.advertisements is null){
+            var countOfAdvertisementToSent = nv.advertisement.Where(s => s.seen == false).Count();
+             Console.WriteLine("Count of unseen:" + countOfAdvertisementToSent);
+            if (countOfAdvertisementToSent == 0)
+            {
                 return Ok();
             }
             WebScrapController ws = new WebScrapController();
@@ -37,7 +40,7 @@ namespace myapp.Controllers
             using (var message = new MailMessage("mwenjie@gmail.com", nv.email)
             {
                 Subject = nv.subject,
-                Body = nv.advertisements
+                Body = string.Join("\n", nv.advertisement.Where(s => s.seen == false).Select(s => s.title + "|" + s.price + "|" + s.location).ToList().ToArray())
                 //string.Join("\n", strings.ToArray())
             }
             )

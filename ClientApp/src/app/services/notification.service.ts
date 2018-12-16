@@ -2,7 +2,7 @@ import { Injectable, Injector } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http'
 import { AuthService } from '../services/auth.service';
-import { retry, tap, mergeMap} from 'rxjs/operators';
+import { retry, tap, mergeMap, map} from 'rxjs/operators';
 import {formatDate} from '@angular/common';
 
 
@@ -12,17 +12,16 @@ export class NotificationService {
     constructor(protected http: HttpClient, injector: Injector, private authService: AuthService) {
     }
 
-    getMutedAdvertisement(id: string): Observable<Advertisement[]>{
-        const adverts: Advertisement[] = [
-            { Id: '129203', Title: 'Intel g4560', Price: 10, Location: 'Sydney', DateListed: new Date() },
-            { Id: '129203', Title: 'Intel g3960', Price: 10, Location: 'Sydney', DateListed: new Date() },
-          ];
-        console.log("getting advert:id is "+ id);
-        return of(adverts);
+    updateAdvertisementSeenFlag(notificationId: number, advertisementId: string, flag:boolean){
+        return this.http.put('/api/advertisement/' + notificationId + '/' + advertisementId, flag);
     }
 
-    saveNotification(notification: Notification) {
-        return this.http.post('/api/notification', notification);
+    getNotification(id: string): Observable<Notification>{
+       return this.http.get<Notification>('/api/notification/' + id, this.authService.getRequestHeaders());
+    }
+
+    saveNotification(notification: Notification): Observable<Notification> {
+        return this.http.post<Notification>('/api/notification', notification);
     }
 
     countNotification(): Observable<Notification[]> {
@@ -35,8 +34,8 @@ export class NotificationService {
         return this.http.delete(endpointUrl, this.authService.getRequestHeaders())
     }
 
-    sendNotification(alert: Alert):Observable<any>{
-       return this.http.post<any>('/api/alert/send', alert);
+    sendNotification(notification: Notification):Observable<any>{
+       return this.http.post<any>('/api/alert/send', notification);
     }
 
     queryAdvertisement(notification: Notification):Observable<Notification> {
