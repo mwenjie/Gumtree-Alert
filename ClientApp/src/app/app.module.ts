@@ -11,15 +11,9 @@ import { MatListModule } from '@angular/material/list';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { AppComponent } from './components/app.component';
-import { HomeComponent } from './components/home/home.component';
 import { FetchDataComponent } from './components/fetch-data/fetch-data.component';
 import { FetchDetailComponent } from './components/fetch-data/fetch-detail.component';
-import { NavMenuComponent} from './components/nav-menu/nav-menu.component';
 import { ConfigureAlertDialogComponent} from './components/fetch-data/config-alert.component';
-import { RegisterComponent } from './components/register/register.component';
-import { Add2FaComponent } from './components/register/add2fa.component';
-import { SlidePanelComponent } from './components/slide-panel/slide-panel.component';
-import { LoginComponent } from './components/login/login.component';
 
 import { fakeBackendProvider } from './_helper/fake-backend';
 import { AuthGuard } from './_helper/auth.guard';
@@ -31,15 +25,9 @@ import { NotificationService} from './services/notification.service';
 @NgModule({
   declarations: [
     AppComponent,
-    NavMenuComponent,
-    HomeComponent,
     FetchDataComponent,
     FetchDetailComponent,
-    ConfigureAlertDialogComponent,
-    RegisterComponent,
-    Add2FaComponent,
-    SlidePanelComponent,
-    LoginComponent
+    ConfigureAlertDialogComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -58,11 +46,8 @@ import { NotificationService} from './services/notification.service';
     MatGridListModule,
     NgbModule.forRoot(),
     RouterModule.forRoot([
-      { path: '', component: HomeComponent, canActivate: [AuthGuard], pathMatch: 'full' },
-      { path: 'fetch-data', component: FetchDataComponent, canActivate: [AuthGuard] },
-      { path: 'fetch-detail/:id', component: FetchDetailComponent, canActivate: [AuthGuard] },
-      { path: 'register', component: RegisterComponent },
-      { path: 'login', component: LoginComponent },
+      { path: '', component: FetchDataComponent},
+      { path: 'fetch-detail/:id', component: FetchDetailComponent},
     ])
   ],
   providers: [fakeBackendProvider, AuthService, UserService, AlertService, AuthGuard, NotificationService],

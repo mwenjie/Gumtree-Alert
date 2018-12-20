@@ -52,7 +52,7 @@ export class FetchDetailComponent implements OnInit {
 
 goBacktoNotification() {
   let notificationId = this.notificationId ? this.notificationId : null;
-  this.router.navigate(['/fetch-data', { id: notificationId }]);
+  this.router.navigate(['/']);
 }
 
 /** Whether the number of selected elements matches the total number of rows. */
