@@ -27,10 +27,12 @@ export class FetchDetailComponent implements OnInit {
 
     this.route.paramMap.pipe(
       switchMap((params: ParamMap) =>
-        this.notificationService.getNotification(params.get('id'))
+        this.notificationService.getNotification(params.get('id')
+        )
       )
     ).subscribe(result => {
       this.notification = result;
+      this.notificationId = "" + result.id;
       this.dataSource = result.advertisement;
       result.advertisement ? result.advertisement.filter(r => r.seen == true).forEach(row => this.selection.select(row)) : null;
     });
@@ -50,10 +52,7 @@ export class FetchDetailComponent implements OnInit {
 
 goBacktoNotification() {
   let notificationId = this.notificationId ? this.notificationId : null;
-  // Pass along the hero id if available
-  // so that the HeroList component can select that hero.
-  // Include a junk 'foo' property for fun.
-  this.router.navigate(['/fetch-data', { id: notificationId, foo: 'foo' }]);
+  this.router.navigate(['/fetch-data', { id: notificationId }]);
 }
 
 /** Whether the number of selected elements matches the total number of rows. */

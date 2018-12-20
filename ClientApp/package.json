@@ -34,7 +34,7 @@
     "bootstrap": "^3.3.7",
     "core-js": "^2.4.1",
     "jquery": "^1.9.1",
-    "ngx-qrcode3": "^0.3.0",
+    "ngx-qrcode2": "0.0.9",
     "otplib": "^10.0.1",
     "rxjs": "^6.3.2",
     "rxjs-compat": "^6.3.2",

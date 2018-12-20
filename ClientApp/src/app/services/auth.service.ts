@@ -10,6 +10,7 @@ export class AuthService {
     private _IsLoggedin = new Subject<boolean>();
 
     constructor(protected http: HttpClient, injector: Injector) {
+        this.reevaluateLoginStatus();
     }
 
     getQr(): Observable<HttpResponse<string>> {
@@ -56,6 +57,15 @@ export class AuthService {
     });
 
     return { headers: headers };
+  }
+
+  reevaluateLoginStatus(currentUser?: User) {
+
+    let user = currentUser || this.currentUser;
+    let isLoggedIn = user != null;
+
+    if(isLoggedIn)
+    this._IsLoggedin.next(true);
   }
 
 }

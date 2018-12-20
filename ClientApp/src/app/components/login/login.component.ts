@@ -77,7 +77,7 @@ export class LoginComponent implements OnInit {
         let token = this.authenticationService.getToken(this.currrentUser.secret);
         if (token == this.code.value) {
             this.alertService.success('Login successful', true);
-            this.router.navigate(['/']);
+            this.router.navigate(['/fetch-data']);
         }
     }
 }

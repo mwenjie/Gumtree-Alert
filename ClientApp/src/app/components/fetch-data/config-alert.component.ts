@@ -69,7 +69,7 @@ import { AlertService } from '../../services/alert.service';
       this.notificationService.saveNotification(newNotification)
       .subscribe(
         data => {
-          this.alertService.success("Notification created");
+          this.alertService.success1("Notification created");
           this.dialogRef.close();
         },
         error => {

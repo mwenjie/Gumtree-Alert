@@ -50,7 +50,7 @@ export class AlertService {
                 // auto-dismiss wait time (in seconds)  
                 delay: 5,
                 // default position
-                position: 'bottom-right',
+                position: 'top-center',
                 // adds a close button to notifier messages
                 closeButton: false
             },
@@ -93,6 +93,10 @@ export class AlertService {
                     // Do nothing
                 }
             });
+    }
+
+    success1(message: string){
+        alertify.success(message);
     }
 
     success(message: string, keepAfterNavigationChange = false) {

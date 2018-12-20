@@ -45,7 +45,7 @@ export class NotificationService {
     calculateInterval(frequency: string) {
         let tempInterval: number;
         switch (frequency) {
-            case "Every hour": { tempInterval = 1 * 60 * 1000; break; } // 1s = 1000
+            case "Every hour": { tempInterval = 1*60 * 60 * 1000; break; } // 1s = 1000
             case "Every 4 hour": { tempInterval = 4*60 * 60 * 1000; break; }
             case "Daily": { tempInterval = 24*60 * 60 * 1000; break; }
         }

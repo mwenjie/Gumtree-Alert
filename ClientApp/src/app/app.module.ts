@@ -4,14 +4,13 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
-import { NgxQRCodeModule } from 'ngx-qrcode3';
-import { MatDialogModule, MatFormFieldModule, MatInputModule, MatTableModule, MatCheckboxModule} from "@angular/material";
+import { NgxQRCodeModule } from 'ngx-qrcode2';
+import { MatDialogModule, MatFormFieldModule, MatInputModule, MatTableModule, MatCheckboxModule, MatGridListModule} from "@angular/material";
 import { MatSelectModule} from '@angular/material/select';
 import { MatListModule } from '@angular/material/list';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { AppComponent } from './components/app.component';
-import { AlertComponent} from './components/shared/alert.component';
 import { HomeComponent } from './components/home/home.component';
 import { FetchDataComponent } from './components/fetch-data/fetch-data.component';
 import { FetchDetailComponent } from './components/fetch-data/fetch-detail.component';
@@ -32,7 +31,6 @@ import { NotificationService} from './services/notification.service';
 @NgModule({
   declarations: [
     AppComponent,
-    AlertComponent,
     NavMenuComponent,
     HomeComponent,
     FetchDataComponent,
@@ -57,11 +55,12 @@ import { NotificationService} from './services/notification.service';
     MatTableModule,
     MatCheckboxModule,
     MatListModule,
+    MatGridListModule,
     NgbModule.forRoot(),
     RouterModule.forRoot([
       { path: '', component: HomeComponent, canActivate: [AuthGuard], pathMatch: 'full' },
-      { path: 'fetch-data', component: FetchDataComponent },
-      { path: 'fetch-detail/:id', component: FetchDetailComponent },
+      { path: 'fetch-data', component: FetchDataComponent, canActivate: [AuthGuard] },
+      { path: 'fetch-detail/:id', component: FetchDetailComponent, canActivate: [AuthGuard] },
       { path: 'register', component: RegisterComponent },
       { path: 'login', component: LoginComponent },
     ])

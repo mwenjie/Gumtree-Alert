@@ -1,7 +1,6 @@
 import { trigger, state, transition, style, animate} from '@angular/animations';
 import { Component, OnInit} from '@angular/core'
 import { FormGroup, FormControl, FormBuilder, Validators, AbstractControl } from '@angular/forms';
-import { NgxQRCodeModule } from 'ngx-qrcode3';
 import { AuthService} from '../../services/auth.service';
 import { UserService} from '../../services/user.service';
 import { AlertService} from '../../services/alert.service';
