@@ -9,9 +9,11 @@ using Newtonsoft.Json;
 using myapp.Data.Models;
 using System.Globalization;
 using ClientApp.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace myapp.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     public class WebScrapController : Controller
     {

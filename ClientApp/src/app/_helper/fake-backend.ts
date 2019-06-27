@@ -38,7 +38,15 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         let users: any[] = JSON.parse(localStorage.getItem('users')) || [];
         let secretKey: string = JSON.parse(localStorage.getItem('secretKey')) || null;
         let notifications: any[] = JSON.parse(localStorage.getItem('notifications')) || [];
-
+        let token = JSON.parse(localStorage.getItem("access_token"));
+        
+        console.log(token);
+        if (token) {
+          request = request.clone({
+            setHeaders: {
+              Authorization: `Bearer ${token}`
+            }
+          });
         // wrap in delayed observable to simulate server api call
         return Observable.of(null).mergeMap(() => {
 
@@ -259,10 +267,11 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             .dematerialize();
     }
 }
+}
 
-export let fakeBackendProvider = {
+export const fakeBackendProvider = {
     // use fake backend in place of Http service for backend-less development
     provide: HTTP_INTERCEPTORS,
     useClass: FakeBackendInterceptor,
     multi: true
-};
+}

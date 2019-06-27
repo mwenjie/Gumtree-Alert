@@ -4,6 +4,7 @@ import { FormGroup, FormBuilder, FormControl, Validators} from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material';
 import { NotificationService } from '../../services/notification.service';
 import { AlertService } from '../../services/alert.service';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 
 @Component({
@@ -43,6 +44,10 @@ import { AlertService } from '../../services/alert.service';
         this.form.get('max').setValue(this.data.max);
         this.form.get('advertisement').setValue(this.data.advertisement);
 
+        this.subject.valueChanges
+        .pipe(debounceTime(100), distinctUntilChanged())
+        .subscribe(r => this.url.setValue("https://www.gumtree.com.au/s-" + r.replace(/\s/g,"+") + "/k0"));
+
       }
   
     close(): void {
@@ -66,15 +71,18 @@ import { AlertService } from '../../services/alert.service';
       newNotification.min = this.form.value.min;
       newNotification.max = this.form.value.max;
       newNotification.advertisement = this.form.value.advertisement;
-      this.notificationService.saveNotification(newNotification)
-      .subscribe(
-        data => {
-          this.alertService.success1("Notification created");
-          this.dialogRef.close();
-        },
-        error => {
-          this.alertService.error(error);
+      this.notificationService.queryAdvertisement(newNotification).subscribe(result => {
+        newNotification.advertisement = result.advertisement;
+        this.notificationService.saveNotification(newNotification).subscribe(
+          status => {
+            this.alertService.success1("Notification created");
+            this.dialogRef.close();
+          },
+          error => {
+            this.alertService.error(error);
+          });
         });
+ 
     }
 
     get subject() { return this.form.get('subject'); }

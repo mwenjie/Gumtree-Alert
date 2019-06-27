@@ -9,9 +9,11 @@ using System.Globalization;
 using System.Net.Mail;
 using System.Net;
 using ClientApp.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace myapp.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     public class AlertController : Controller
     {
